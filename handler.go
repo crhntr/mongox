@@ -2,12 +2,20 @@ package mongox
 
 import (
 	"encoding/json"
+	"io"
+	"log"
 	"net/http"
 	"os"
 	"path"
 	"path/filepath"
 	"strings"
+
+	"github.com/globalsign/mgo"
 )
+
+type ResourceClosures struct {
+	Insert func(r io.Reader) (interface{}, error)
+}
 
 func (mux *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var head string
@@ -36,21 +44,81 @@ func (mux *Mux) handleAPI(w http.ResponseWriter, r *http.Request) {
 	var head string
 	head, r.URL.Path = shiftPath(r.URL.Path)
 
-	var cols []string
+	if r.URL.Path != "/" {
+		col, action := shiftPath(r.URL.Path)
+		log.Printf("%s\t%s", action, col)
+		if _, found := mux.colMap[col]; !found {
+			http.NotFound(w, r)
+			return
+		}
 
-	for key, _ := range mux.colMap {
-		cols = append(cols, key)
+		switch action {
+		case "/insert":
+			mux.insert(w, r, col)
+		case "/find":
+			mux.find(w, r, col)
+		case "/update":
+			mux.update(w, r, col)
+		case "/remove":
+			mux.remove(w, r, col)
+		default:
+			http.NotFound(w, r)
+		}
+	} else {
+		switch head {
+		case "db":
+			w.WriteHeader(http.StatusOK)
+
+			w.Header().Set("Content-Type", contentTypes["json"])
+
+			var cols []string
+
+			for key, _ := range mux.colMap {
+				cols = append(cols, key)
+			}
+
+			json.NewEncoder(w).Encode(struct {
+				Collections []string `json:"collections"`
+			}{cols})
+		default:
+			http.NotFound(w, r)
+		}
+	}
+}
+
+func (mux *Mux) insert(w http.ResponseWriter, r *http.Request, col string) {
+	resource, err := mux.colMap[col].Insert(r.Body)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	w.Header().Set("Content-Type", contentTypes["json"])
-	enc := json.NewEncoder(w)
-	switch head {
-	case "db":
-		w.WriteHeader(http.StatusOK)
-		enc.Encode(struct {
-			Collections []string `json:"collections"`
-		}{cols})
+	sess := mux.session.Clone()
+	defer sess.Close()
+	if err := sess.DB("").C(col).Insert(resource); err != nil {
+		if mgo.IsDup(err) {
+			http.Error(w, "duplicate resource", http.StatusBadRequest)
+			return
+		}
+		if err.Error() == "Document failed validation" {
+			http.Error(w, "Document failed validation", http.StatusBadRequest)
+			return
+		}
+
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(resource)
+}
+func (mux *Mux) find(w http.ResponseWriter, r *http.Request, col string) {
+	http.Error(w, "error find not implemented", http.StatusNotImplemented)
+}
+func (mux *Mux) update(w http.ResponseWriter, r *http.Request, col string) {
+	http.Error(w, "error update not implemented", http.StatusNotImplemented)
+}
+func (mux *Mux) remove(w http.ResponseWriter, r *http.Request, col string) {
+	http.Error(w, "error remove not implemented", http.StatusNotImplemented)
 }
 
 // shiftPath splits off the first component of p, which will be cleaned of

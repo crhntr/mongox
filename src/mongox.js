@@ -3,12 +3,12 @@ function createCollectionModule(name) {
     namespaced: true,
 
     actions: {
-      insert: function (doc) {
+      insert: function (context, doc) {
         if (doc === undefined) {throw new Error('document undefined')}
-
-        return Vue.http.post(`/api/db/${name}/insert`, req)
-      },
-      find: function (query = {}, projection) {
+        console.log(doc)
+        return Vue.http.post(`/api/db/${name}/insert`, doc)
+      } /* ,
+      find: function (context, {query = {}, projection}) {
         var req = {query}
         if (projection !== undefined) {
           req.projection = projection
@@ -16,17 +16,17 @@ function createCollectionModule(name) {
 
         return Vue.http.post(`/api/db/${name}/find`, req)
       },
-      update: function (query, update) {
+      update: function (context, {query, update}) {
         if (query === undefined) {throw new Error('query undefined')}
         if (update === undefined) {throw new Error('update undefined')}
 
         return Vue.http.post(`/api/db/${name}/update`, {query, update})
       },
-      remove: function (query) {
+      remove: function (context, {query}) {
         if (query === undefined) {throw new Error('query undefined')}
 
         return Vue.http.post(`/api/db/${name}/remove`, {query})
-      }
+      } */
     },
     mutations: {}
   }
@@ -34,6 +34,8 @@ function createCollectionModule(name) {
 
 
 var dbModule = {
+  namespaced: true,
+
   store: {
     collections: []
   },
@@ -56,11 +58,11 @@ class MonGoX {
     return store => {
       store.registerModule('db', dbModule)
       Vue.http.get('/api/db').then(res => {
-        var cols = res.body.collections || []
-        for (var col in cols) {
-          store.registerModule(['db', col], createCollectionModule(col))
+        var cols = res.body.collections
+        for (var i in cols) {
+          store.registerModule(['db', cols[i]], createCollectionModule(cols[i]))
         }
-        store.commit('collections', cols)
+        store.commit('db/collections', res.body.collections)
         console.log(store)
       }, err => {
         console.log(res.body)

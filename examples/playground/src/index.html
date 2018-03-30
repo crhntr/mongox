@@ -11,7 +11,8 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="dist-src/mongox.js"></script>
 
-    <script src="src/components/CreateDocument.js"></script>
+    <script src="src/components/InsertJSON.js"></script>
+
     <script src="src/pages/Dashboard.js"></script>
     <script src="src/pages/Collection.js"></script>
 
@@ -27,7 +28,7 @@
     <div id="app">
       <nav>
         <strong><router-link to="/">playgound</router-link></strong>
-        <router-link v-for="col in $store.getters.collections" :to="'/c/'+col" :key="col">{{col}}</router-link>
+        <router-link v-for="col in $store.getters['db/collections']" :to="'/c/'+col" :key="col">{{col}}</router-link>
       </nav>
       <router-view></router-view>
     </div>

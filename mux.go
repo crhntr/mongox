@@ -1,39 +1,38 @@
 package mongox
 
 import (
-	"log"
-
+	"github.com/crhntr/mongox/entity"
 	"github.com/globalsign/mgo"
 )
+
+type MakeResourceFunc func() entity.EntityReferencer
 
 type Mux struct {
 	session   *mgo.Session
 	webappSrc string
-	colMap    map[string]struct{}
+	colMap    map[string]ResourceClosures
 }
 
-func New(dbName, dbAddr, webappSrc string, collections ...string) *Mux {
+func New(dbName, dbAddr, webappSrc string) *Mux {
 	sess, err := mgo.DialWithInfo(&mgo.DialInfo{
 		Addrs:    []string{dbAddr},
-		Database: dbAddr,
+		Database: dbName,
 	})
 	if err != nil {
 		panic(err)
 	}
+	sess.SetSafe(&mgo.Safe{})
 
-	var colMap = make(map[string]struct{})
-
-	for _, col := range collections {
-		colMap[col] = struct{}{}
+	return &Mux{
+		session:   sess,
+		webappSrc: webappSrc,
+		colMap:    make(map[string]ResourceClosures),
 	}
-	colMap["users"] = struct{}{}
+}
 
-	collections = collections[:0]
-	for key, _ := range colMap {
-		collections = append(collections, key)
+func (mux *Mux) Resource(col string, closures ResourceClosures) {
+	if _, found := mux.colMap[col]; found {
+		panic("resource with name " + col + "already exists")
 	}
-
-	log.Printf("collections: %q", collections)
-
-	return &Mux{session: sess, webappSrc: webappSrc, colMap: colMap}
+	mux.colMap[col] = closures
 }
