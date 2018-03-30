@@ -3,7 +3,8 @@ var InsertJSON = Vue.component('insert-json', {
     return {
       raw: '{\n\t"text":"Hello, world!"\n}',
       doc: {},
-      msg: ''
+      msg: '',
+      textColor: '#000'
     }
   },
   props: ['col'],
@@ -11,10 +12,15 @@ var InsertJSON = Vue.component('insert-json', {
   watch: {
     'raw': function () {
       try {
-        this.doc = JSON.parse(this.raw)
+        if (this.raw) {
+          this.doc = JSON.parse(this.raw)
+        }
+
         this.msg = ''
+        this.textColor = '#000'
       } catch (e) {
-        this.msg = e
+        this.textColor = '#F00'
+        this.msg = 'json error'
       }
     }
   },
@@ -37,8 +43,10 @@ var InsertJSON = Vue.component('insert-json', {
     }
   },
 
-  template: `<div>
+  template: `<div class="insert-json">
   <textarea v-model="raw"
+    :style="{color: textColor}"
+    placeholder="insert document"
     onkeydown="if(event.keyCode===9){var v=this.value,s=this.selectionStart,e=this.selectionEnd;this.value=v.substring(0, s)+'\t'+v.substring(e);this.selectionStart=this.selectionEnd=s+1;return false;}"></textarea>
   <p v-if="msg">{{msg}}</p>
   <button @click="insert()">Insert into {{col}}</button>
