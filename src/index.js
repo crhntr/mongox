@@ -1,4 +1,4 @@
-export default function initMongox (url, {}) {
+function init (url, {}) {
 
   return store => {
 
@@ -8,3 +8,6 @@ export default function initMongox (url, {}) {
     })
   }
 }
+
+
+export default {init}
