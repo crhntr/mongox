@@ -1,5 +1,3 @@
-
-
 var InsertJSON = Vue.component('insert-json', {
   data () {
     return {
