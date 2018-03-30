@@ -1,3 +1,20 @@
-function init () {
-  console.log('here')
+
+
+
+
+function main () {
+
+
+
+
+  let app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Vue!'
+    }
+  })
+
+
+
+
 }
