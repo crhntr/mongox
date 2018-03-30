@@ -22,7 +22,7 @@ func NewEntity() Entity {
 
 var ACPath = "_ac"
 
-var EntitySelectDoc = bson.M{"_id": 1, ACPath: 1}
+var SelectEntityDoc = bson.M{"_id": 1, ACPath: 1}
 
 type EntityReference struct {
 	Col string        `json:"c" bson:"c"`
@@ -132,7 +132,7 @@ func (ac AC) DeletePermitted(ids ...EntityReference) bool {
 
 func (id EntityReference) ReadPermitted(db *mgo.Database, ids ...EntityReference) bool {
 	var ent Entity
-	if err := db.C(id.Col).FindId(id.ID).One(&ent); err != nil {
+	if err := db.C(id.Col).FindId(id.ID).Select(SelectEntityDoc).One(&ent); err != nil {
 		return false
 	}
 	return ent.AC.ReadPermitted(ids...)
@@ -140,7 +140,7 @@ func (id EntityReference) ReadPermitted(db *mgo.Database, ids ...EntityReference
 
 func (id EntityReference) UpdatePermitted(db *mgo.Database, ids ...EntityReference) bool {
 	var ent Entity
-	if err := db.C(id.Col).FindId(id.ID).One(&ent); err != nil {
+	if err := db.C(id.Col).FindId(id.ID).Select(SelectEntityDoc).One(&ent); err != nil {
 		return false
 	}
 	return ent.AC.UpdatePermitted(ids...)
@@ -148,7 +148,7 @@ func (id EntityReference) UpdatePermitted(db *mgo.Database, ids ...EntityReferen
 
 func (id EntityReference) DeletePermitted(db *mgo.Database, ids ...EntityReference) bool {
 	var ent Entity
-	if err := db.C(id.Col).FindId(id.ID).One(&ent); err != nil {
+	if err := db.C(id.Col).FindId(id.ID).Select(SelectEntityDoc).One(&ent); err != nil {
 		return false
 	}
 	return ent.AC.DeletePermitted(ids...)
