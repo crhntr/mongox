@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	dbName             = "mongox_test"
+	dbName             = "mongox_entity_test"
 	databaseSession, _ = mgo.DialWithInfo(&mgo.DialInfo{
 		Database: dbName,
 		Addrs:    []string{":27017"},
