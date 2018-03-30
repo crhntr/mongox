@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>playground</title>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vuex/dist/vuex.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script src="https://unpkg.com/vue-resource/dist/vue-resource.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="dist-src/mongox.js"></script>
+
+    <script src="src/components/CreateDocument.js"></script>
+    <script src="src/pages/Dashboard.js"></script>
+    <script src="src/pages/Collection.js"></script>
+
+    <script src="src/store.js"></script>
+    <script src="src/router.js"></script>
+
+    <script src="src/main.js"></script>
+
+    <link href="src/main.css" rel="stylesheet" type="text/css" ></link>
+  </head>
+
+  <body onload="main()">
+    <div id="app">
+      <router-view></router-view>
+    </div>
+  </body>
+</html>
