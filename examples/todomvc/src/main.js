@@ -1,4 +1,4 @@
-function main () {
+function main () {z
   new Vue({
     el: '#app',
     data: function () {

@@ -6,16 +6,10 @@ var TodoInput = Vue.component('todo-input', {
     }
   },
 
-  methods: {
-    addTodo: function () {
-      console.log(this.description)
-    }
-  },
-
   template: `
   <input class="new-todo"
     autofocus autocomplete="off"
     placeholder="What needs to be done?"
     v-model="description"
-    @keyup.enter="addTodo"/>`
+    @keyup.enter="$store.dispatch('addTodo', {description})"/>`
 })

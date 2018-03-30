@@ -1,4 +1,5 @@
 const store = new Vuex.Store({
+  plugins: [MonGoX.vuexPlugin()],
   state: {
     count: 0
   },
