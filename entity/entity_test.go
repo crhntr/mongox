@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/crhntr/mongo-go-driver/bson/objectid"
 	"github.com/crhntr/mongox/entity"
 	"github.com/globalsign/mgo"
-	"github.com/globalsign/mgo/bson"
 )
 
 var (
@@ -17,6 +17,8 @@ var (
 		Addrs:    []string{":27017"},
 	})
 )
+
+type mp map[string]interface{}
 
 func TestMain(m *testing.M) {
 	flag.Parse()
@@ -29,7 +31,7 @@ const UserCol = "user"
 
 type User struct {
 	entity.Entity `bson:",inline"`
-	Teams         []bson.ObjectId `bson:"teams"`
+	Teams         []objectid.ObjectID `bson:"teams"`
 }
 
 func (this User) GetEntityReference() entity.EntityReference {
@@ -204,7 +206,7 @@ func TestACL(t *testing.T) {
 	}
 
 	post0N := 101
-	if err := db.C(PostCol).UpdateId(post0.ID, bson.M{"$set": bson.M{"n": post0N}}); err != nil {
+	if err := db.C(PostCol).UpdateId(post0.ID, mp{"$set": mp{"n": post0N}}); err != nil {
 		t.Fatal(err)
 	}
 	// t.Log(post0)
@@ -339,8 +341,8 @@ func TestACL(t *testing.T) {
 		t.Fatal()
 	}
 
-	entity.UpdateEntity(db, user0, bson.M{
-		"$set": bson.M{"foo": "bar"},
+	entity.UpdateEntity(db, user0, entity.Map{
+		"$set": mp{"foo": "bar"},
 	})
 	post0.GetEntityReference().GetEntityReference()
 

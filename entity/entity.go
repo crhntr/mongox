@@ -5,33 +5,35 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/crhntr/mongo-go-driver/bson/objectid"
 	"github.com/globalsign/mgo"
-	"github.com/globalsign/mgo/bson"
 )
 
+type Map map[string]interface{}
+
 type Entity struct {
-	ID bson.ObjectId `json:"_id" bson:"_id"`
+	ID objectid.ObjectID `json:"_id" bson:"_id"`
 	AC `json:"_ac" bson:"_ac"`
 }
 
 func New() Entity {
 	return Entity{
-		ID: bson.NewObjectId(),
+		ID: objectid.New(),
 	}
 }
 
 var ACPath = "_ac"
 
-var SelectEntityDoc = bson.M{"_id": 1, ACPath: 1}
+var SelectEntityDoc = map[string]int{"_id": 1, ACPath: 1}
 
 type EntityReference struct {
-	Col string        `json:"c" bson:"c"`
-	ID  bson.ObjectId `json:"id" bson:"id"`
+	Col string            `json:"c" bson:"c"`
+	ID  objectid.ObjectID `json:"id" bson:"id"`
 }
 
-func (id EntityReference) Validate() error {
-	if id.Col == "" || !id.ID.Valid() {
-		return fmt.Errorf("invalid identity {%q: %q}", id.Col, id.ID.Hex())
+func (ref EntityReference) Validate() error {
+	if ref.Col == "" || ref.ID == objectid.NilObjectID {
+		return fmt.Errorf("invalid identity {%q: %q}", ref.Col, ref.ID)
 	}
 	return nil
 }
@@ -193,41 +195,41 @@ func (ac *AC) PermitDelete(ids ...EntityReference) {
 }
 
 func (entity EntityReference) PersistClearUDR(db *mgo.Database, ids ...EntityReference) error {
-	return db.C(entity.Col).UpdateId(entity.ID, bson.M{
-		"$pullAll": bson.M{ACPath + ".u": ids, ACPath + ".d": ids, ACPath + ".r": ids},
+	return db.C(entity.Col).UpdateId(entity.ID, Map{
+		"$pullAll": Map{ACPath + ".u": ids, ACPath + ".d": ids, ACPath + ".r": ids},
 	})
 }
 
 func (entity EntityReference) PersistPermitRead(db *mgo.Database, ids ...EntityReference) error {
-	return db.C(entity.Col).UpdateId(entity.ID, bson.M{
-		"$pullAll":  bson.M{ACPath + ".u": ids, ACPath + ".d": ids},
-		"$addToSet": bson.M{ACPath + ".r": bson.M{"$each": ids}},
+	return db.C(entity.Col).UpdateId(entity.ID, Map{
+		"$pullAll":  Map{ACPath + ".u": ids, ACPath + ".d": ids},
+		"$addToSet": Map{ACPath + ".r": Map{"$each": ids}},
 	})
 }
 
 func (entity EntityReference) PersistPermitUpdate(db *mgo.Database, ids ...EntityReference) error {
-	return db.C(entity.Col).UpdateId(entity.ID, bson.M{
-		"$pullAll":  bson.M{ACPath + ".r": ids, ACPath + ".d": ids},
-		"$addToSet": bson.M{ACPath + ".u": bson.M{"$each": ids}},
+	return db.C(entity.Col).UpdateId(entity.ID, Map{
+		"$pullAll":  Map{ACPath + ".r": ids, ACPath + ".d": ids},
+		"$addToSet": Map{ACPath + ".u": Map{"$each": ids}},
 	})
 }
 
 func (entity EntityReference) PersistPermitDelete(db *mgo.Database, ids ...EntityReference) error {
-	return db.C(entity.Col).UpdateId(entity.ID, bson.M{
-		"$pullAll":  bson.M{ACPath + ".r": ids, ACPath + ".u": ids},
-		"$addToSet": bson.M{ACPath + ".d": bson.M{"$each": ids}},
+	return db.C(entity.Col).UpdateId(entity.ID, Map{
+		"$pullAll":  Map{ACPath + ".r": ids, ACPath + ".u": ids},
+		"$addToSet": Map{ACPath + ".d": Map{"$each": ids}},
 	})
 }
 
 func (entity EntityReference) PersistPublic(db *mgo.Database) error {
-	return db.C(entity.Col).UpdateId(entity.ID, bson.M{
-		"$set": bson.M{ACPath + ".p": true},
+	return db.C(entity.Col).UpdateId(entity.ID, Map{
+		"$set": Map{ACPath + ".p": true},
 	})
 }
 
 func (entity EntityReference) PersistPrivate(db *mgo.Database) error {
-	return db.C(entity.Col).UpdateId(entity.ID, bson.M{
-		"$set": bson.M{ACPath + ".p": false},
+	return db.C(entity.Col).UpdateId(entity.ID, Map{
+		"$set": Map{ACPath + ".p": false},
 	})
 }
 
@@ -243,7 +245,7 @@ func FilterEntityReferenceList(ids []EntityReference, cutset ...EntityReference)
 	return filtered
 }
 
-func EntityReferences(col string, ids ...bson.ObjectId) []EntityReference {
+func EntityReferences(col string, ids ...objectid.ObjectID) []EntityReference {
 	refs := make([]EntityReference, len(ids))
 	for i, id := range ids {
 		refs[i] = EntityReference{col, id}
@@ -266,7 +268,7 @@ func RefreshEntity(db *mgo.Database, entity EntityReferencer) error {
 	return db.C(ref.Col).FindId(ref.ID).One(entity)
 }
 
-func UpdateEntity(db *mgo.Database, entity EntityReferencer, updateDoc bson.M) error {
+func UpdateEntity(db *mgo.Database, entity EntityReferencer, updateDoc Map) error {
 	ref := entity.GetEntityReference()
 	return db.C(ref.Col).UpdateId(ref.ID, updateDoc)
 }
