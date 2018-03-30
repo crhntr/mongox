@@ -11,7 +11,7 @@ import (
 
 type Entity struct {
 	ID bson.ObjectId `json:"_id" bson:"_id"`
-	AC `json:"-" bson:"_ac"`
+	AC `json:"_ac" bson:"_ac"`
 }
 
 func New() Entity {
