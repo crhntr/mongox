@@ -1,0 +1,10 @@
+{
+  "name": "mongox",
+  "version": "0.1.0",
+  "description": "A reactive application tool",
+  "main": "index.js",
+  "repository": "https://github.com/crhntr/mongox",
+  "author": "crhntr <hunter.christopher@icloud.com>",
+  "license": "MIT",
+  "private": false
+}
