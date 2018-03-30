@@ -1,20 +1,19 @@
-
-
-
-
 function main () {
-
-
-
-
-  let app = new Vue({
+  new Vue({
     el: '#app',
-    data: {
-      message: 'Hello Vue!'
+    data: function () {
+      return {
+        msg: 'hello'
+      }
+    },
+    router,
+    store,
+    directives: {
+      'todo-focus': function (el, binding) {
+        if (binding.value) {
+          el.focus()
+        }
+      }
     }
   })
-
-
-
-
 }
