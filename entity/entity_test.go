@@ -65,12 +65,12 @@ func TestACL(t *testing.T) {
 		t.Fatal()
 	}
 
-	user0 := User{Entity: entity.NewEntity()}
-	user1 := User{Entity: entity.NewEntity()}
-	user2 := User{Entity: entity.NewEntity()}
+	user0 := User{Entity: entity.New()}
+	user1 := User{Entity: entity.New()}
+	user2 := User{Entity: entity.New()}
 
-	team0 := Team{Entity: entity.NewEntity()}
-	team1 := Team{Entity: entity.NewEntity()}
+	team0 := Team{Entity: entity.New()}
+	team1 := Team{Entity: entity.New()}
 
 	for _, idfr := range []entity.EntityReferencer{user0, user1, user2, team0, team1} {
 		if err := idfr.GetEntityReference().Validate(); err != nil {
@@ -78,7 +78,7 @@ func TestACL(t *testing.T) {
 		}
 	}
 
-	post0 := Post{Entity: entity.NewEntity()}
+	post0 := Post{Entity: entity.New()}
 	if err := post0.SetCreator(identityZeroVal); err == nil {
 		t.Fatal()
 	}
@@ -344,7 +344,7 @@ func TestACL(t *testing.T) {
 	})
 	post0.GetEntityReference().GetEntityReference()
 
-	post3 := Post{Entity: entity.NewEntity()}
+	post3 := Post{Entity: entity.New()}
 	entity.InsertList(db, post3)
 	post3.GetEntityReference().PersistPublic(db)
 

@@ -11,10 +11,10 @@ import (
 
 type Entity struct {
 	ID bson.ObjectId `json:"_id" bson:"_id"`
-	AC `json:"_ac" bson:"_ac"`
+	AC `json:"-" bson:"_ac"`
 }
 
-func NewEntity() Entity {
+func New() Entity {
 	return Entity{
 		ID: bson.NewObjectId(),
 	}
