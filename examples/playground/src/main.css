@@ -1,5 +1,26 @@
+body, html {
+  margin: 0;
+}
+body {width: 100vw}
+
 nav a {
   padding: 10px;
   color: #3157B0;
   text-decoration: none;
+}
+#app {
+  margin: 0 auto;
+  width: 95%;
+}
+textarea {
+  width: 95%;
+  min-height: 200px;
+  resize: vertical;
+}
+
+.insert-json {
+  margin-bottom: 5%
+}
+.data-browser {
+
 }

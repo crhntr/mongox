@@ -1,0 +1,73 @@
+.json {
+  padding:1em 0 1em 0;
+  font-size: 16px;
+  display: block;
+}
+.json * {
+  margin: 0px;
+  padding: 0px;
+}
+.json *::before, .json *::after, .json::before, .json::after{
+  color: hsl(32, 60%, 60%);
+  display: inline-block;
+}
+.json a, .json p, .json .object, .json .array {
+  padding-left: 2em;
+}
+.json::before {
+  content: "{"
+}
+.json::after {
+  content: "}"
+}
+.json .array>a:before, .json .array>p:before{
+  content: "\""
+}
+.json a, .json p {
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+}
+.json * a, .json * p {
+  display: block;
+  padding-left: 2em;
+}
+.json .object>a:before, .json .object>p:before{
+  content: "\"" attr(json-key) "\": \""
+}
+.json a:before, .json p:before{
+  content: "\"" attr(json-key) "\": \""
+}
+.json .array>a:before, .json .array>p:before{
+  content: "\""
+}
+.json a:after, .json p:after{
+  content: "\","
+}
+.json a:last-child::after, .json p:last-child::after{
+  content: "\"";
+}
+.json div.object:before {
+  content: "\"" attr(json-key) "\": {";  padding: 0.2em 0;
+}
+.json div.array:before {
+  content: "\"" attr(json-key) "\": [";  padding: 0.2em 0;
+}
+.json div.array:after {
+  content: "],";
+}
+.json div.object:after {
+  content: "},";
+}
+.json .array .object::before{
+  content: "{"
+}
+.json .array .array::before{
+  content: "["
+}
+.json div.array:last-child:after {
+  content: "]";
+  display: block;
+}
+.json div.object:last-child:after {
+  content: "}"
+}

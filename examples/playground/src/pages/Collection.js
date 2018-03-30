@@ -3,5 +3,7 @@ var CollectionPage = Vue.component('collection-page', {
   template: `<section>
   <h1>{{name}}</h1>
   <insert-json :col="name"></insert-json>
+
+  <data-browser :col="name"></data-browser>
 </section>`
 })
