@@ -2,8 +2,6 @@ package mongox
 
 import (
 	"encoding/json"
-	"io"
-	"log"
 	"net/http"
 	"os"
 	"path"
@@ -13,8 +11,8 @@ import (
 	"github.com/globalsign/mgo"
 )
 
-type ResourceClosures struct {
-	Insert func(r io.Reader) (interface{}, error)
+type ResourceHandlers struct {
+	Insert func(w http.ResponseWriter, r *http.Request) (interface{}, error)
 }
 
 func (mux *Mux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -45,24 +43,19 @@ func (mux *Mux) handleAPI(w http.ResponseWriter, r *http.Request) {
 	head, r.URL.Path = shiftPath(r.URL.Path)
 
 	if r.URL.Path != "/" {
-		col, action := shiftPath(r.URL.Path)
-		log.Printf("%s\t%s", action, col)
-		if _, found := mux.colMap[col]; !found {
-			http.NotFound(w, r)
-			return
-		}
+		col, _ := shiftPath(r.URL.Path)
 
-		switch action {
-		case "/insert":
-			mux.insert(w, r, col)
-		case "/find":
+		switch r.Method {
+		case http.MethodPost:
+			// mux.insert(w, r, col)
+		case http.MethodGet:
 			mux.find(w, r, col)
-		case "/update":
+		case http.MethodPatch:
 			mux.update(w, r, col)
-		case "/remove":
+		case http.MethodDelete:
 			mux.remove(w, r, col)
 		default:
-			http.NotFound(w, r)
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		}
 	} else {
 		switch head {
@@ -87,13 +80,14 @@ func (mux *Mux) handleAPI(w http.ResponseWriter, r *http.Request) {
 }
 
 func (mux *Mux) insert(w http.ResponseWriter, r *http.Request, col string) {
-	resource, err := mux.colMap[col].Insert(r.Body)
+	resource, err := mux.colMap[col].Insert(w, r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
 	sess := mux.session.Clone()
 	defer sess.Close()
+
 	if err := sess.DB("").C(col).Insert(resource); err != nil {
 		if mgo.IsDup(err) {
 			http.Error(w, "duplicate resource", http.StatusBadRequest)
@@ -111,6 +105,7 @@ func (mux *Mux) insert(w http.ResponseWriter, r *http.Request, col string) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(resource)
 }
+
 func (mux *Mux) find(w http.ResponseWriter, r *http.Request, col string) {
 	http.Error(w, "error find not implemented", http.StatusNotImplemented)
 }

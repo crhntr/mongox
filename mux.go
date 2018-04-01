@@ -1,16 +1,13 @@
 package mongox
 
 import (
-	"github.com/crhntr/mongox/entity"
 	"github.com/globalsign/mgo"
 )
-
-type MakeResourceFunc func() entity.EntityReferencer
 
 type Mux struct {
 	session   *mgo.Session
 	webappSrc string
-	colMap    map[string]ResourceClosures
+	colMap    map[string]ResourceHandlers
 }
 
 func New(dbName, dbAddr, webappSrc string) *Mux {
@@ -26,11 +23,11 @@ func New(dbName, dbAddr, webappSrc string) *Mux {
 	return &Mux{
 		session:   sess,
 		webappSrc: webappSrc,
-		colMap:    make(map[string]ResourceClosures),
+		colMap:    make(map[string]ResourceHandlers),
 	}
 }
 
-func (mux *Mux) Resource(col string, closures ResourceClosures) {
+func (mux *Mux) Resource(col string, closures ResourceHandlers) {
 	if _, found := mux.colMap[col]; found {
 		panic("resource with name " + col + "already exists")
 	}
