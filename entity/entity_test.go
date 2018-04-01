@@ -5,9 +5,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/crhntr/mongo-go-driver/bson/objectid"
 	"github.com/crhntr/mongox/entity"
 	"github.com/globalsign/mgo"
+	"github.com/mongodb/mongo-go-driver/bson/objectid"
 )
 
 var (
