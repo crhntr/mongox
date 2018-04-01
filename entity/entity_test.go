@@ -42,7 +42,7 @@ func TestEntity(t *testing.T) {
 	team1 := Team{Entity: entity.New()}
 
 	for _, idfr := range []entity.EntityReferencer{user0, user1, user2, team0, team1} {
-		if err := idfr.GetEntityReference().Validate(); err != nil {
+		if err := idfr.Ref().Validate(); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -67,145 +67,145 @@ func TestEntity(t *testing.T) {
 		t.Fatal()
 	}
 
-	if err := entity.PersistClearUDR(db, post0.GetEntityReference(), user1.GetEntityReference()); err != nil {
+	if err := entity.PersistClearUDR(db, post0.Ref(), user1.Ref()); err != nil {
 		t.Fatal()
 	}
-	if entity.DeletePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if entity.DeletePermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-	if entity.UpdatePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if entity.UpdatePermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-	if entity.ReadPermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	if err := entity.PersistPermitRead(db, post0.GetEntityReference(), user1.GetEntityReference()); err != nil {
-		t.Fatal()
-	}
-	if entity.DeletePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if entity.UpdatePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !entity.ReadPermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if err := entity.PersistPermitUpdate(db, post0.GetEntityReference(), user1.GetEntityReference()); err != nil {
-		t.Fatal()
-	}
-	if entity.DeletePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !entity.UpdatePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !entity.ReadPermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if err := entity.PersistPermitDelete(db, post0.GetEntityReference(), user1.GetEntityReference()); err != nil {
-		t.Fatal()
-	}
-	if !entity.DeletePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !entity.UpdatePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !entity.ReadPermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if entity.ReadPermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
 
-	if err := entity.PersistPermitUpdate(db, post0.GetEntityReference(), user1.GetEntityReference()); err != nil {
+	if err := entity.PersistPermitRead(db, post0.Ref(), user1.Ref()); err != nil {
 		t.Fatal()
 	}
-	if entity.DeletePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if entity.DeletePermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-	if !entity.UpdatePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if entity.UpdatePermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-	if !entity.ReadPermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if !entity.ReadPermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-
-	if err := entity.PersistPermitRead(db, post0.GetEntityReference(), user1.GetEntityReference()); err != nil {
+	if err := entity.PersistPermitUpdate(db, post0.Ref(), user1.Ref()); err != nil {
 		t.Fatal()
 	}
-	if entity.DeletePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if entity.DeletePermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-	if entity.UpdatePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if !entity.UpdatePermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-	if !entity.ReadPermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if !entity.ReadPermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-
-	if err := entity.PersistClearUDR(db, post0.GetEntityReference(), user1.GetEntityReference()); err != nil {
+	if err := entity.PersistPermitDelete(db, post0.Ref(), user1.Ref()); err != nil {
 		t.Fatal()
 	}
-	if entity.DeletePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if !entity.DeletePermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-	if entity.UpdatePermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
+	if !entity.UpdatePermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-	if entity.ReadPermitted(db, post0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	if err := entity.PersistClearUDR(db, user2.GetEntityReference()); err == nil {
-		t.Fatal()
-	}
-	if err := entity.PersistPermitRead(db, user2.GetEntityReference()); err == nil {
-		t.Fatal()
-	}
-	if err := entity.PersistPermitUpdate(db, user2.GetEntityReference()); err == nil {
-		t.Fatal()
-	}
-	if err := entity.PersistPermitDelete(db, user2.GetEntityReference()); err == nil {
+	if !entity.ReadPermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
 
-	if entity.ReadPermitted(db, user2.GetEntityReference()) {
+	if err := entity.PersistPermitUpdate(db, post0.Ref(), user1.Ref()); err != nil {
 		t.Fatal()
 	}
-	if entity.UpdatePermitted(db, user2.GetEntityReference()) {
+	if entity.DeletePermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
-	if entity.DeletePermitted(db, user2.GetEntityReference()) {
+	if !entity.UpdatePermitted(db, post0.Ref(), user1.Ref()) {
+		t.Fatal()
+	}
+	if !entity.ReadPermitted(db, post0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
 
-	if entity.ReadPermitted(db, post0.GetEntityReference(), user2.GetEntityReference()) {
+	if err := entity.PersistPermitRead(db, post0.Ref(), user1.Ref()); err != nil {
+		t.Fatal()
+	}
+	if entity.DeletePermitted(db, post0.Ref(), user1.Ref()) {
+		t.Fatal()
+	}
+	if entity.UpdatePermitted(db, post0.Ref(), user1.Ref()) {
+		t.Fatal()
+	}
+	if !entity.ReadPermitted(db, post0.Ref(), user1.Ref()) {
+		t.Fatal()
+	}
+
+	if err := entity.PersistClearUDR(db, post0.Ref(), user1.Ref()); err != nil {
+		t.Fatal()
+	}
+	if entity.DeletePermitted(db, post0.Ref(), user1.Ref()) {
+		t.Fatal()
+	}
+	if entity.UpdatePermitted(db, post0.Ref(), user1.Ref()) {
+		t.Fatal()
+	}
+	if entity.ReadPermitted(db, post0.Ref(), user1.Ref()) {
+		t.Fatal()
+	}
+
+	if err := entity.PersistClearUDR(db, user2.Ref()); err == nil {
+		t.Fatal()
+	}
+	if err := entity.PersistPermitRead(db, user2.Ref()); err == nil {
+		t.Fatal()
+	}
+	if err := entity.PersistPermitUpdate(db, user2.Ref()); err == nil {
+		t.Fatal()
+	}
+	if err := entity.PersistPermitDelete(db, user2.Ref()); err == nil {
+		t.Fatal()
+	}
+
+	if entity.ReadPermitted(db, user2.Ref()) {
+		t.Fatal()
+	}
+	if entity.UpdatePermitted(db, user2.Ref()) {
+		t.Fatal()
+	}
+	if entity.DeletePermitted(db, user2.Ref()) {
+		t.Fatal()
+	}
+
+	if entity.ReadPermitted(db, post0.Ref(), user2.Ref()) {
 		t.Fatal()
 	}
 	user2.Teams = append(user2.Teams, team0.ID)
 
-	entity.PersistPermitRead(db, post0.GetEntityReference(), team0.GetEntityReference())
+	entity.PersistPermitRead(db, post0.Ref(), team0.Ref())
 
-	refs := append(entity.EntityReferences(TeamCol, user2.Teams...), user2.GetEntityReference())
+	refs := append(entity.EntityReferences(TeamCol, user2.Teams...), user2.Ref())
 
-	if !entity.ReadPermitted(db, post0.GetEntityReference(), refs...) {
+	if !entity.ReadPermitted(db, post0.Ref(), refs...) {
 		t.Fatal()
 	}
 
 	entity.UpdateEntity(db, user0, entity.Map{
 		"$set": mp{"foo": "bar"},
 	})
-	post0.GetEntityReference().GetEntityReference()
+	post0.Ref().Ref()
 
 	post3 := Post{Entity: entity.New()}
 	entity.InsertList(db, post3)
-	entity.PersistPublic(db, post3.GetEntityReference())
+	entity.PersistPublic(db, post3.Ref())
 
-	if !entity.ReadPermitted(db, post3.GetEntityReference(), user0.GetEntityReference()) {
+	if !entity.ReadPermitted(db, post3.Ref(), user0.Ref()) {
 		t.Fatal()
 	}
-	entity.PersistPrivate(db, post3.GetEntityReference())
-	if entity.ReadPermitted(db, post3.GetEntityReference(), user0.GetEntityReference()) {
+	entity.PersistPrivate(db, post3.Ref())
+	if entity.ReadPermitted(db, post3.Ref(), user0.Ref()) {
 		t.Fatal()
 	}
 }

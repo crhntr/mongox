@@ -24,7 +24,7 @@ type EntityReference struct {
 }
 
 type EntityReferencer interface {
-	GetEntityReference() EntityReference
+	Ref() EntityReference
 }
 
 type Map map[string]interface{}
@@ -38,7 +38,7 @@ func (ref EntityReference) Validate() error {
 	return nil
 }
 
-func (ref EntityReference) GetEntityReference() EntityReference {
+func (ref EntityReference) Ref() EntityReference {
 	return ref
 }
 

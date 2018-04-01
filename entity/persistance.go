@@ -4,7 +4,7 @@ import "github.com/globalsign/mgo"
 
 func InsertList(db *mgo.Database, entityList ...EntityReferencer) (int, error) {
 	for i, entity := range entityList {
-		ref := entity.GetEntityReference()
+		ref := entity.Ref()
 		if err := db.C(ref.Col).Insert(entity); err != nil {
 			return len(entityList) - i, err
 		}
@@ -13,12 +13,12 @@ func InsertList(db *mgo.Database, entityList ...EntityReferencer) (int, error) {
 }
 
 func RefreshEntity(db *mgo.Database, entity EntityReferencer) error {
-	ref := entity.GetEntityReference()
+	ref := entity.Ref()
 	return db.C(ref.Col).FindId(ref.ID).One(entity)
 }
 
 func UpdateEntity(db *mgo.Database, entity EntityReferencer, updateDoc Map) error {
-	ref := entity.GetEntityReference()
+	ref := entity.Ref()
 	return db.C(ref.Col).UpdateId(ref.ID, updateDoc)
 }
 

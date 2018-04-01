@@ -12,7 +12,7 @@ type User struct {
 	Teams         []objectid.ObjectID `bson:"teams"`
 }
 
-func (this User) GetEntityReference() entity.EntityReference {
+func (this User) Ref() entity.EntityReference {
 	return entity.EntityReference{UserCol, this.ID}
 }
 
@@ -22,7 +22,7 @@ type Team struct {
 	entity.Entity `bson:",inline"`
 }
 
-func (this Team) GetEntityReference() entity.EntityReference {
+func (this Team) Ref() entity.EntityReference {
 	return entity.EntityReference{TeamCol, this.ID}
 }
 
@@ -33,6 +33,6 @@ type Post struct {
 	N             int `bson:"n"`
 }
 
-func (this Post) GetEntityReference() entity.EntityReference {
+func (this Post) Ref() entity.EntityReference {
 	return entity.EntityReference{PostCol, this.ID}
 }

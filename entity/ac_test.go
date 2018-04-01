@@ -19,117 +19,117 @@ func TestACL(t *testing.T) {
 	if err := post0.SetCreator(identityZeroVal); err == nil {
 		t.Fatal()
 	}
-	if err := post0.SetCreator(user0.GetEntityReference()); err != nil {
+	if err := post0.SetCreator(user0.Ref()); err != nil {
 		t.Fatal()
 	}
-	if err := post0.SetCreator(user0.GetEntityReference()); err == nil {
-		t.Fatal()
-	}
-
-	if !post0.DeletePermitted(user0.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.UpdatePermitted(user0.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.ReadPermitted(user0.GetEntityReference()) {
+	if err := post0.SetCreator(user0.Ref()); err == nil {
 		t.Fatal()
 	}
 
-	if post0.ReadPermitted(user1.GetEntityReference()) {
+	if !post0.DeletePermitted(user0.Ref()) {
 		t.Fatal()
 	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
+	if !post0.UpdatePermitted(user0.Ref()) {
 		t.Fatal()
 	}
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	if !post0.ReadPermitted(user1.GetEntityReference(), user0.GetEntityReference()) {
+	if !post0.ReadPermitted(user0.Ref()) {
 		t.Fatal()
 	}
 
-	if !post0.ReadPermitted(user0.GetEntityReference(), user1.GetEntityReference()) {
+	if post0.ReadPermitted(user1.Ref()) {
+		t.Fatal()
+	}
+	if post0.UpdatePermitted(user1.Ref()) {
+		t.Fatal()
+	}
+	if post0.DeletePermitted(user1.Ref()) {
 		t.Fatal()
 	}
 
-	post0.PermitDelete(team0.GetEntityReference(), team1.GetEntityReference())
-
-	post0.ClearUDR(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.ReadPermitted(user1.GetEntityReference()) {
+	if !post0.ReadPermitted(user1.Ref(), user0.Ref()) {
 		t.Fatal()
 	}
 
-	post0.PermitRead(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
+	if !post0.ReadPermitted(user0.Ref(), user1.Ref()) {
 		t.Fatal()
 	}
 
-	post0.PermitUpdate(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
+	post0.PermitDelete(team0.Ref(), team1.Ref())
+
+	post0.ClearUDR(user1.Ref())
+	if post0.DeletePermitted(user1.Ref()) {
 		t.Fatal()
 	}
-	if !post0.UpdatePermitted(user1.GetEntityReference()) {
+	if post0.UpdatePermitted(user1.Ref()) {
 		t.Fatal()
 	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
+	if post0.ReadPermitted(user1.Ref()) {
 		t.Fatal()
 	}
 
-	post0.PermitDelete(user1.GetEntityReference())
-	if !post0.DeletePermitted(user1.GetEntityReference()) {
+	post0.PermitRead(user1.Ref())
+	if post0.DeletePermitted(user1.Ref()) {
 		t.Fatal()
 	}
-	if !post0.UpdatePermitted(user1.GetEntityReference()) {
+	if post0.UpdatePermitted(user1.Ref()) {
 		t.Fatal()
 	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	post0.PermitUpdate(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
+	if !post0.ReadPermitted(user1.Ref()) {
 		t.Fatal()
 	}
 
-	post0.PermitRead(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
+	post0.PermitUpdate(user1.Ref())
+	if post0.DeletePermitted(user1.Ref()) {
 		t.Fatal()
 	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
+	if !post0.UpdatePermitted(user1.Ref()) {
 		t.Fatal()
 	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
+	if !post0.ReadPermitted(user1.Ref()) {
 		t.Fatal()
 	}
 
-	post0.ClearUDR(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
+	post0.PermitDelete(user1.Ref())
+	if !post0.DeletePermitted(user1.Ref()) {
 		t.Fatal()
 	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
+	if !post0.UpdatePermitted(user1.Ref()) {
 		t.Fatal()
 	}
-	if post0.ReadPermitted(user1.GetEntityReference()) {
+	if !post0.ReadPermitted(user1.Ref()) {
+		t.Fatal()
+	}
+
+	post0.PermitUpdate(user1.Ref())
+	if post0.DeletePermitted(user1.Ref()) {
+		t.Fatal()
+	}
+	if !post0.UpdatePermitted(user1.Ref()) {
+		t.Fatal()
+	}
+	if !post0.ReadPermitted(user1.Ref()) {
+		t.Fatal()
+	}
+
+	post0.PermitRead(user1.Ref())
+	if post0.DeletePermitted(user1.Ref()) {
+		t.Fatal()
+	}
+	if post0.UpdatePermitted(user1.Ref()) {
+		t.Fatal()
+	}
+	if !post0.ReadPermitted(user1.Ref()) {
+		t.Fatal()
+	}
+
+	post0.ClearUDR(user1.Ref())
+	if post0.DeletePermitted(user1.Ref()) {
+		t.Fatal()
+	}
+	if post0.UpdatePermitted(user1.Ref()) {
+		t.Fatal()
+	}
+	if post0.ReadPermitted(user1.Ref()) {
 		t.Fatal()
 	}
 }
