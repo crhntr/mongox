@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func TestACL(t *testing.T) {
+func TestEntity(t *testing.T) {
 	db := databaseSession.DB("")
 
 	identityZeroVal := entity.EntityReference{}
@@ -48,122 +48,6 @@ func TestACL(t *testing.T) {
 	}
 
 	post0 := Post{Entity: entity.New()}
-	if err := post0.SetCreator(identityZeroVal); err == nil {
-		t.Fatal()
-	}
-	if err := post0.SetCreator(user0.GetEntityReference()); err != nil {
-		t.Fatal()
-	}
-	if err := post0.SetCreator(user0.GetEntityReference()); err == nil {
-		t.Fatal()
-	}
-
-	if !post0.DeletePermitted(user0.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.UpdatePermitted(user0.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.ReadPermitted(user0.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	if post0.ReadPermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	if !post0.ReadPermitted(user1.GetEntityReference(), user0.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	if !post0.ReadPermitted(user0.GetEntityReference(), user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	post0.PermitDelete(team0.GetEntityReference(), team1.GetEntityReference())
-
-	post0.ClearUDR(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.ReadPermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	post0.PermitRead(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	post0.PermitUpdate(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	post0.PermitDelete(user1.GetEntityReference())
-	if !post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	post0.PermitUpdate(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	post0.PermitRead(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if !post0.ReadPermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-
-	post0.ClearUDR(user1.GetEntityReference())
-	if post0.DeletePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.UpdatePermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
-	if post0.ReadPermitted(user1.GetEntityReference()) {
-		t.Fatal()
-	}
 
 	if _, err := entity.InsertList(db, user0, user1, team0, post0); err != nil {
 		t.Fatal(err)
