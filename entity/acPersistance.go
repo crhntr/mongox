@@ -22,7 +22,7 @@ func UpdateEntity(db *mgo.Database, entity EntityReferencer, updateDoc Map) erro
 	return db.C(ref.Col).UpdateId(ref.ID, updateDoc)
 }
 
-func (ref EntityReference) ReadPermitted(db *mgo.Database, ids ...EntityReference) bool {
+func ReadPermitted(db *mgo.Database, ref EntityReference, ids ...EntityReference) bool {
 	var ent Entity
 	if err := db.C(ref.Col).FindId(ref.ID).Select(SelectEntityDoc).One(&ent); err != nil {
 		return false
@@ -30,7 +30,7 @@ func (ref EntityReference) ReadPermitted(db *mgo.Database, ids ...EntityReferenc
 	return ent.AC.ReadPermitted(ids...)
 }
 
-func (ref EntityReference) UpdatePermitted(db *mgo.Database, ids ...EntityReference) bool {
+func UpdatePermitted(db *mgo.Database, ref EntityReference, ids ...EntityReference) bool {
 	var ent Entity
 	if err := db.C(ref.Col).FindId(ref.ID).Select(SelectEntityDoc).One(&ent); err != nil {
 		return false
@@ -38,7 +38,7 @@ func (ref EntityReference) UpdatePermitted(db *mgo.Database, ids ...EntityRefere
 	return ent.AC.UpdatePermitted(ids...)
 }
 
-func (ref EntityReference) DeletePermitted(db *mgo.Database, ids ...EntityReference) bool {
+func DeletePermitted(db *mgo.Database, ref EntityReference, ids ...EntityReference) bool {
 	var ent Entity
 	if err := db.C(ref.Col).FindId(ref.ID).Select(SelectEntityDoc).One(&ent); err != nil {
 		return false
@@ -46,40 +46,40 @@ func (ref EntityReference) DeletePermitted(db *mgo.Database, ids ...EntityRefere
 	return ent.AC.DeletePermitted(ids...)
 }
 
-func (ref EntityReference) PersistClearUDR(db *mgo.Database, ids ...EntityReference) error {
+func PersistClearUDR(db *mgo.Database, ref EntityReference, ids ...EntityReference) error {
 	return db.C(ref.Col).UpdateId(ref.ID, Map{
 		"$pullAll": Map{ACPath + ".u": ids, ACPath + ".d": ids, ACPath + ".r": ids},
 	})
 }
 
-func (ref EntityReference) PersistPermitRead(db *mgo.Database, ids ...EntityReference) error {
+func PersistPermitRead(db *mgo.Database, ref EntityReference, ids ...EntityReference) error {
 	return db.C(ref.Col).UpdateId(ref.ID, Map{
 		"$pullAll":  Map{ACPath + ".u": ids, ACPath + ".d": ids},
 		"$addToSet": Map{ACPath + ".r": Map{"$each": ids}},
 	})
 }
 
-func (ref EntityReference) PersistPermitUpdate(db *mgo.Database, ids ...EntityReference) error {
+func PersistPermitUpdate(db *mgo.Database, ref EntityReference, ids ...EntityReference) error {
 	return db.C(ref.Col).UpdateId(ref.ID, Map{
 		"$pullAll":  Map{ACPath + ".r": ids, ACPath + ".d": ids},
 		"$addToSet": Map{ACPath + ".u": Map{"$each": ids}},
 	})
 }
 
-func (ref EntityReference) PersistPermitDelete(db *mgo.Database, ids ...EntityReference) error {
+func PersistPermitDelete(db *mgo.Database, ref EntityReference, ids ...EntityReference) error {
 	return db.C(ref.Col).UpdateId(ref.ID, Map{
 		"$pullAll":  Map{ACPath + ".r": ids, ACPath + ".u": ids},
 		"$addToSet": Map{ACPath + ".d": Map{"$each": ids}},
 	})
 }
 
-func (ref EntityReference) PersistPublic(db *mgo.Database) error {
+func PersistPublic(db *mgo.Database, ref EntityReference) error {
 	return db.C(ref.Col).UpdateId(ref.ID, Map{
 		"$set": Map{ACPath + ".p": true},
 	})
 }
 
-func (ref EntityReference) PersistPrivate(db *mgo.Database) error {
+func PersistPrivate(db *mgo.Database, ref EntityReference) error {
 	return db.C(ref.Col).UpdateId(ref.ID, Map{
 		"$set": Map{ACPath + ".p": false},
 	})
